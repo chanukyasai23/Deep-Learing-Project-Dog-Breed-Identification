@@ -1,1 +1,127 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed May 27 15:52:21 2020
+
+@author: chanukya sai
+"""
+import os
+
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+from tensorflow.keras.optimizers import RMSprop #import this to get run quickly 
+from tensorflow.keras.models import model_from_json#import to save & run  the model later 
+from tensorflow.keras.models import load_model
+
+# Directory with dabermann pictures 
+dabermann_dir = os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\dabermann')
+
+# Directory with dalmation pictures 
+dalmation_dir = os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\dalmation')
+
+# Directory with  germansheperd pictures
+germansheperd_dir = os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\germansheperd')
+
+
+labrador_dir =os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\labrador')
+
+
+pitbull_dir =os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\pitbull')
+
+# Directory with pomeranian pictures
+pomeranian_dir = os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\pomeranian')
+
+# Directory with pug pictures
+pug_dir = os.path.join(r'C:\Users\asus\Desktop\dogs_breed_identification\pug')
+
+train_dabermann_names = os.listdir(dabermann_dir)
+print(train_dabermann_names[:7])
+
+train_dalmation_names = os.listdir(dalmation_dir)
+print(train_dalmation_names[:7])
+
+train_germansheperd_names = os.listdir(germansheperd_dir)
+print(train_germansheperd_names[:7])
+
+train_labrador_names = os.listdir(labrador_dir)
+print(train_labrador_names[:7])
+
+train_pitbull_names = os.listdir(pitbull_dir)
+print(train_pitbull_names[:7])
+
+train_pomeranian_names = os.listdir(pomeranian_dir)
+print(train_pomeranian_names[:7])
+
+train_pug_names = os.listdir(pug_dir)
+print(train_pug_names[:7])
+
+batch_size = 256#divides
+
+# All images will be rescaled by 1./255
+train_datagen = ImageDataGenerator(rescale=1/255)#quality
+
+# Flow training images in batches of 128 using train_datagen generator
+train_generator = train_datagen.flow_from_directory(r'C:\Users\asus\Desktop\dogs_breed_identification',  # This is the source directory for training images
+        target_size=(200, 200),  # All images will be resized to 200 x 200
+        batch_size=batch_size,
+        # Specify the classes explicitly
+        classes = ['dabermann','dalmation','germansheperd','labrador','pitbull','pomeranian','pug'],
+        # Since we use categorical_crossentropy loss, we need categorical labels
+        class_mode='categorical')
+target_size=(200,200)
+
+#$input_shape = tuple(list(target_size)+[3])
+model = tf.keras.models.Sequential([
+    # Note the input shape is the desired size of the image 200x 200 with 3 bytes color
+    # The first convolution
+    tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(200, 200, 3)),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    # The second convolution
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    # The third convolution
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+     # The fourth convolution
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    # Flatten the results to feed into a dense layer
+    tf.keras.layers.Flatten(),
+    # 128 neuron in the fully-connected layer
+    tf.keras.layers.Dense(128, activation='relu'),
+    # 5 output neurons for 5 classes with the softmax activation
+    tf.keras.layers.Dense(7, activation='softmax')#probabilty
+])
+model.summary()
+
+# Optimizer and compilation
+model.compile(loss='categorical_crossentropy',optimizer=tf.keras.optimizers.Adam(lr=0.001),#0.001
+              metrics=['acc'])#RMSprop(lr=0.001)
+# Total sample count
+total_sample=train_generator.n
+# Training
+num_epochs = 16
+model.fit_generator(train_generator,steps_per_epoch=int(total_sample/batch_size),
+                    epochs=num_epochs,verbose=1)
+
+
+
+"""
+
+history = model.fit_generator(
+        train_generator, 
+        steps_per_epoch=int(total_sample/batch_size),  
+        epochs=num_epochs,
+        verbose=1)
+
+"""
+
+# serialize model to JSON
+model_json = model.to_json()
+with open("model795.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights("model795.h5")
+print("Saved model to disk")
+
+"""
 
