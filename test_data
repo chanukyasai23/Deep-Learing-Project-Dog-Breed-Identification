@@ -37,7 +37,7 @@ Details[4] = 'AMERICAN PITBULL\n\nTemperament: \n Stubborn, Clownish, Affectiona
 Details[5] = 'POMERANIAN\n\nTemperament:\nInquisitive, Bold, Lively\nAKC Breed Popularity: Ranks 23 of 195\nHeight: 6-7 inches\nWeight: 3-7 pounds\nLife Expectancy: 12-16 years\nGroup: Toy Group \n\nThe tiny Pomeranian, long a favorite of royals and commoners alike, has been called the ideal companion.\n\nThe glorious coat, smiling, foxy face, and vivacious personality have helped \nmake the Pom one of the world''s most popular toy breeds.'
 Details[6] = 'PUG\nTemperament:\nCharming, Mischievous, Loving\nAKC Breed Popularity: Ranks 28 of 195\nHeight: 10-13 inches\nWeight: 14-18 pounds\nLife Expectancy: 13-15 years\nGroup: Toy Group \n\nOnce the mischievous companion of Chinese emperors, and later the mascot of Holland’s royal House of Orange, the small but solid Pug is today adored by his millions of fans around the world.\nPugs live to love and to be loved in return.'
 
-a=list(result[0]);#---->[0.0, 0.0, 1.0, 0.0, 0.0]
+a=list(result[0]);#---->[0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 b=a.index(max(a));
 #print(classes[b]);
 print(Details[b])#gives provided details about the dog breed
