@@ -1,0 +1,43 @@
+"""
+Created on wednesday 27 09:25:13 2020
+@author: chanukya
+"""
+pass
+import warnings
+warnings.filterwarnings("ignore")
+
+
+json_file = open(r'C:\Users\asus\model795.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+
+from tensorflow.keras.models import model_from_json
+loaded_model = model_from_json(loaded_model_json)
+
+# load weights into new model
+loaded_model.load_weights("model795.h5")
+print("Loaded model from disk")
+
+import numpy as np
+from tensorflow.keras.preprocessing import image
+test_image=image.load_img(r'C:\Users\asus\Desktop\dogs_breed_identification\pomeranian\o (84).jpg',target_size=(200,200))
+test_image=image.img_to_array(test_image)
+test_image=np.expand_dims(test_image,axis=0)
+
+#print(test_image)
+result=loaded_model.predict(test_image)
+classes = ['dabermann','dalmation','germansheperd','labrador','pitbull','pomeranian','pug']
+# Creating a Dictionary  named with Details
+Details = {}
+Details[0] = 'DOBERMAN PINSCHER\n\nTemperament:\nLoyal, Fearless, Alert\nAKC Breed Popularity: Ranks 17 of 195\nHeight: 26-28 inches (male), 24-26 inches (female)\nWeight: 75-100 pounds (male), 60-90 pounds (female)\nLife Expectancy: 10-12 year\nGroup: Working Group \n\nSleek and powerful, possessing both a magnificent physique and \nkeen intelligence.\nThe Doberman Pinscher is one of dogkind''s noblemen. \n\nThis incomparably fearless and vigilant breed stands proudly among the world''s finest protection dogs.'
+Details[1] = 'DALMATION\n\nTemperament:\nDignified, Smart, Outgoing\nAKC Breed Popularity: Ranks 56 of 195\nHeight: 19-24 inches\nWeight: 45-70 pounds\nLife Expectancy: 11-13 years\nGroup: Non-Sporting Group \n\nThe dignified Dalmatian, dogdom''s citizen of the world, is famed for his spotted coat and unique job description.\nDuring their long history, these "coach dogs" have accompanied the horse-drawn rigs of nobles, gypsies, and firefighters.'
+Details[2] = 'GERMAN SHEPERD\n\nTemperament:\nConfident, Courageous, Smart\nAKC Breed Popularity: Ranks 2 of 195\nHeight: 24-26 inches (male), 22-24 inches (female)\nWeight: 65-90 pounds (male), 50-70 pounds (female)\nLife Expectancy: 7-10 years\nGroup: Herding Group \n\nGenerally considered dogkind’s finest all-purpose worker,the German Shepherd Dog is a large, agile, muscular dog of noble character and high intelligence.\n\nLoyal, confident, courageous, and steady, the German Shepherd is truly a dog lover’s delight.'
+Details[3] = 'Labrador Retriever\n\nTemperament:\nFriendly, Active, Outgoing\nAKC Breed Popularity: Ranks 1 of 195\nHeight: 22.5-24.5 inches (male), 21.5-23.5 inches (female)\nWeight: 65-80 pounds (male), 55-70 pounds (female)\nLife Expectancy: 10-12 years\nGroup: Sporting Group \n\nThe sweet-faced, lovable Labrador Retriever is America’s most popular dog breed. \nLabs are friendly, outgoing, and high-spirited companions who have more than enough affection to go around for a family looking for a medium-to-large dog.'
+Details[4] = 'AMERICAN PITBULL\n\nTemperament: \n Stubborn, Clownish, Affectionate, Intelligent, Friendly, Obedient\nAKC Breed Popularity : doesn''t considered into AKC\n height 17-22 inches\nweight 35-65 lbs(male), 30-60 lbs(female)\nLife Span 12-14 years\nGroup : Terrier dog breeds (UKC)\n\nThe Pitbull draws its name from the sport for which they were used. This breed was used to fight bulls and bears in a pit. A Favorite in Middle ages England, this gave them their name, ‘Pit’ from where the sport used to be played and bull comes from the opponents that this feisty breed used to fight.'
+Details[5] = 'POMERANIAN\n\nTemperament:\nInquisitive, Bold, Lively\nAKC Breed Popularity: Ranks 23 of 195\nHeight: 6-7 inches\nWeight: 3-7 pounds\nLife Expectancy: 12-16 years\nGroup: Toy Group \n\nThe tiny Pomeranian, long a favorite of royals and commoners alike, has been called the ideal companion.\n\nThe glorious coat, smiling, foxy face, and vivacious personality have helped \nmake the Pom one of the world''s most popular toy breeds.'
+Details[6] = 'PUG\nTemperament:\nCharming, Mischievous, Loving\nAKC Breed Popularity: Ranks 28 of 195\nHeight: 10-13 inches\nWeight: 14-18 pounds\nLife Expectancy: 13-15 years\nGroup: Toy Group \n\nOnce the mischievous companion of Chinese emperors, and later the mascot of Holland’s royal House of Orange, the small but solid Pug is today adored by his millions of fans around the world.\nPugs live to love and to be loved in return.'
+
+a=list(result[0]);#---->[0.0, 0.0, 1.0, 0.0, 0.0]
+b=a.index(max(a));
+#print(classes[b]);
+print(Details[b])#gives provided details about the dog breed
